@@ -1,6 +1,0 @@
-# This challenge is what it looks like, you are prompted with "You've obtained a hashed password from a compromised leaked database.
-The hash was generated using a common hashing algorithm, and the username and salt are available to you. 
-Your task is to crack the original password and then log in to the website.
-Once logged in, you'll be required to provide two different strings that hash to the same value, Has exploiting a hash collision.
-Successfully submitting these two strings will grant you the flag.
-NOTE: This challenge simulates a real-world attack scenario where attackers leverage hash collisions to bypass security systems and impersonate users."
