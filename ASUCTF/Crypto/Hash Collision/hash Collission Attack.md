@@ -59,6 +59,6 @@ This script reads each line from the `rockyou.txt` file, treats it as a potentia
 
 With the password recovered, it was possible to log in to the provided website using the username "GRC" and the identified password.
 
-The second part of the challenge required identifying two distinct strings that produce the same MD5 hash, demonstrating a hash collision. Discovering such collisions for MD5 manually can be computationally intensive. Therefore, publicly known examples of MD5 collisions were considered. It was found that the strings "Pass" and "pass1234" are known to produce the same MD5 hash value in certain contexts.
+The second part of the challenge required identifying two distinct strings that produce the same MD5 hash, demonstrating a hash collision. Discovering such collisions for MD5 manually can be computationally intensive. so, publicly known examples of MD5 collisions were the choice. I found that the strings "Pass" and "pass1234" are known to produce the same MD5 hash value in certain contexts if using a certain salt+password suffix or prefix.
 
-Submitting these two strings on the website satisfied the hash collision requirement, resulting in the flag.
+Submitting these two strings on the website solved the challenge, resulting in the flag.
