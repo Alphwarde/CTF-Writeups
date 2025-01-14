@@ -1,6 +1,6 @@
 ## Hash Collision Attack - Writeup
-
-### Challenge Description
+### Solve time: 1hr 40mins
+## Challenge Description
 
 The challenge presented, titled "Hash collision attack," involved exploiting a vulnerability related to hashing algorithms. The challenge included the following components:
 
