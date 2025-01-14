@@ -1,5 +1,5 @@
 ## Operation Cipher Breaker
-
+i can see why nobody else solved this question 
 ### Challenge Description
 
 The challenge presented, "Operation Cipher Breaker," is a multi-stage cryptography puzzle. The primary goal was to decrypt an AES encrypted file, which in turn contained a Python script that has  an RSA encryption . Solving the RSA challenge within the decrypted script would give us the flag. While I don't remember the wording of the initial prompt, it explicitly stated that decrypting the provided `.aes` file would be a code (likely Python), and this code would contain an RSA problem that needed to be solved to obtain the flag. This hints at knowing both symmetric and assymetric encodings.
