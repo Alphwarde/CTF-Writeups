@@ -12,6 +12,9 @@ Successfully submitting these two strings will grant you the flag.
 * **Website Link:**  A standard login page was provided, requiring the username "GRC" and the unknown password.
 * **Python File:** A Python script was provided, outlining the hashing process.
 
+## The login page 
+![image](https://github.com/user-attachments/assets/f7972fee-d762-4fef-8f2b-bd3683d2cb97)
+and this is the python script provided:
 ```python
 import hashlib
 
@@ -59,6 +62,19 @@ This script reads each line from the `rockyou.txt` file, treats it as a potentia
 
 With the password recovered, it was possible to log in to the provided website using the username "GRC" and the identified password.
 
-The second part of the challenge required identifying two distinct strings that produce the same MD5 hash, demonstrating a hash collision. Discovering such collisions for MD5 manually can be computationally intensive. so, publicly known examples of MD5 collisions were the choice. I found that the strings "Pass" and "pass1234" are known to produce the same MD5 hash value in certain contexts if using a certain salt+password suffix or prefix.
 
-Submitting these two strings on the website solved the challenge, resulting in the flag.
+
+![image](https://github.com/user-attachments/assets/cfd2ef9b-b004-4a81-80d2-663f9f9b3b05)
+
+
+
+The second part of the challenge required identifying two distinct strings that produce the same MD5 hash, demonstrating a hash collision. Discovering such collisions for MD5 manually can be computationally intensive. so, publicly known examples of MD5 collisions were the choice. I found that the strings "TEXTCOLLBYfGiJUETHQ4hEcKSMd5zYpgqf1YRDhkmxHkhPWptrkoyz28wnI9V0aHeAuaKnak" and "TEXTCOLLBYfGiJUETHQ4hEcKSMd5zYpgqf1YRDhkmxHkhPWptrkoyz28wnI9V0aHeAuaKnak" are known to produce the same MD5 hash value in certain contexts if using a certain salt+password suffix or prefix.
+
+![image](https://github.com/user-attachments/assets/d8f14859-0a5d-40f6-be55-aa712268dbce)
+
+
+
+Submitting these two strings on the website solved the challenge,resulting in the flag.
+
+![image](https://github.com/user-attachments/assets/6a5529c9-47a7-4311-84af-3c59ae09c512)
+Flag is : ASU{hash_collision_found_https://x.com/realhashbreaker/status/1770161965006008570_Successfully!!!}
