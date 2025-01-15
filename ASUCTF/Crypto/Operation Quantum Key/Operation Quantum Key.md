@@ -1,6 +1,6 @@
 ## Operation Quantum Key
 I can also see how nobody else solved this too, This was on the harder side of crypto challenges i've solved in my short journey as a member of JordanSec, but easily the most fun question
-### SOlve time: 1hr 2mins
+### Solve time: 1hr 2mins
 ### Challenge description 
 The challenge presented, "Operation Quantum Key" is also a multi-stage cryptographic puzzle and it included multiple things:
 -  the prompt: An unknown hacker collective has leaked a cryptic message intercepted by intelligence agencies:
@@ -17,9 +17,12 @@ We run `nc 40.113.160.144 9999` and get this:
 
 ![image](https://github.com/user-attachments/assets/8b97a24c-991e-4678-8283-8a37726eb14f)
 
-pressing 1 would give us both "alice" and "bob" public keys which are `8680724990122122342823119227839824929607693219957599727188295537016852159491594744398655721336575440639492271735070533390184057400220197439771429699826871`
-and `5985650914739135659477623614804850046779253117664643591992348731630105874101190659434401411826052031207938337734868776446385892231662171945923442928860817` and P which is `12284094200369358385792101232103895595455493437668802679587532984264194059096271074248048359150273183369728066811829602002978185021415231181671187323504059`
+pressing 1 would give us both "alice" and "bob" public keys which are `866625684913145634932280744953337763315848615365530199150247291824611888025329946595913979185296557954239883717976747215938590753230570173736463142550918`
+and `2091304188572541307992512561367284963250706488208768345901828234262996364127594747162976645235842759156132559281708316208679192877145289410633284186420857` and P which is `3015877229509163204946821698271256218400564263313243446013749420312960675772755810435574752127720601723403882931420600264309136874939530029653810377761127`
 and g which is `2`
+
+![image](https://github.com/user-attachments/assets/e61ad99a-950c-47e2-ad95-94def90ba83e)
+
 in this order, but note that everytime you end your terminal connection it gives you random numbers except the g stays the same,,, so Rereading the challenge's prompt i caught "SecureHintCrypt" which looked weird and new at the same time, so a quick google search got me across this reddit link 
 
 
@@ -47,7 +50,7 @@ if __name__ == "__main__":
 
 Encrypted Hint: /+6K8zWk5QC8PfjrMuKp2djX2eBMPpLCwRLu2FIMghfX8ZfjcOviTu893u03rK6KiMTDtkEvlonPE7eMXkOZF5A=
 ```
-- i was very confused so decided to open the next file, which was `SecureHintCrypt_paper.pdf`, i will only type out the important parts that are needed for the question:
+- To gain a better understanding of the challenge, I reviewed the provided PDF file., which was `SecureHintCrypt_paper.pdf`, i will only type out the important parts that are needed for the question:
 - Core Components:
 ```
 1. SHA-256 Hashing: Used to derive a fixed-length key from a variable-length
@@ -94,7 +97,7 @@ def custom_decrypt(ciphertext, key):
 
 if __name__ == "__main__":
     encrypted_hint = "/+6K8zWk5QC8PfjrMuKp2djX2eBMPpLCwRLu2FIMghfX8ZfjcOviTu893u03rK6KiMTDtkEvlonPE7eMXkOZF5A="
-    key = "hard-extremely-no-way-to-solve-it!!!" # I decrypted the binary 
+    key = "hard-extremely-no-way-to-solve-it!!!" # I converted the binary to text
     
     decrypted_hint = custom_decrypt(encrypted_hint, key)
     print(f"Decrypted Hint: {decrypted_hint}")
@@ -251,11 +254,10 @@ def find_private_key(public_key, p, g):
     return None
 
 
-p = 12284094200369358385792101232103895595455493437668802679587532984264194059096271074248048359150273183369728066811829602002978185021415231181671187323504059
+p = 2097947000756935589608332006513979869804680285113472092732511697964058804291837406041335467618185055009764810923489091292965356311634401988656813522620219
 g = 2
-alice_public = 5985650914739135659477623614804850046779253117664643591992348731630105874101190659434401411826052031207938337734868776446385892231662171945923442928860817
-pop_public = 8680724990122122342823119227839824929607693219957599727188295537016852159491594744398655721336575440639492271735070533390184057400220197439771429699826871
-
+alice_public = 944343232190072225757732522653751527269721401673125445917313822158617642491446271758224871929022022841661017436241653415443762683408594182140273771711648
+pop_public = 2002832255168757964823617278001218206863012971467164422926470261237925584448109141927913700659285807701132784625929149727371838287126294543688530716240676
 
 alice_private = find_private_key(alice_public, p, g)
 
@@ -265,27 +267,29 @@ pop_private = find_private_key(pop_public, p, g)
     print(f"Pop's Private Key: {pop_private}")
 ```
 
-in this scenario we will use Alice's private key which is `5379461` and now to find the shared secret its fairly simple, its just the public key to the power of the private key mod P so by removing everything from the script we just made and putting alice's secret as a variable and using it to find the shared secret, do note that we have to use either bob's public with alice private key or the opposite, we cant use alice's private and public at the same time
+in this scenario we will use Alice's private key which is `4295721` and now to find the shared secret its fairly simple, its just the public key to the power of the private key mod P so by removing everything from the script we just made and putting alice's secret as a variable and using it to find the shared secret, do note that we have to use either bob's public with alice private key or the opposite, we cant use alice's private and public at the same time
 ```python
 
 # Given values for the Diffie-Hellman public parameters
-p = 12284094200369358385792101232103895595455493437668802679587532984264194059096271074248048359150273183369728066811829602002978185021415231181671187323504059
+p = 2097947000756935589608332006513979869804680285113472092732511697964058804291837406041335467618185055009764810923489091292965356311634401988656813522620219
 g = 2
-alice_public = 5985650914739135659477623614804850046779253117664643591992348731630105874101190659434401411826052031207938337734868776446385892231662171945923442928860817
-pop_public = 8680724990122122342823119227839824929607693219957599727188295537016852159491594744398655721336575440639492271735070533390184057400220197439771429699826871
-alice_secret = 5379461
+alice_public = 944343232190072225757732522653751527269721401673125445917313822158617642491446271758224871929022022841661017436241653415443762683408594182140273771711648
+pop_public = 2002832255168757964823617278001218206863012971467164422926470261237925584448109141927913700659285807701132784625929149727371838287126294543688530716240676
+alice_secret = 4295721
 shared_secret = pow(pop_public,alice_secret,p)
 
 print(shared_secret)
 ```
-this printed out ` 7149774283474074929630038793401217113556306890480236317853584968055836638232751179356175171349001069008498650998357753225575052755109537180828470014502512 `, so i went to the `nc` to input this number into the 2nd option and it gave me this: `x+xxxxx+x+x+xx++x+x+x+x+x++++x++x+xxxx+xx+xxxx+xxx+++xxxxx++x+xxx+xxxx++x++x+xxxxx++x+xxx++x++xxx++x++xxxx++xx++x++x+++x` which really confused me until i remembered...
+this printed out ` 1197596624653641676029328792644663063556936155141580998378675183302868669889179362730133398556689968212131806358956158344182770010467402879698694717400241 `, so i went to the `nc` to input this number into the 2nd option and it gave me this: `x+xxxxx+x+x+xx++x+x+x+x+x++++x++x+xxxx+xx+xxxx+xxx+++xxxxx++x+xxx+xxxx++x++x+xxxxx++x+xxx++x++xxx++x++xxxx++xx++x++x+++x` which really confused me until i remembered...
+
+![image](https://github.com/user-attachments/assets/2539f3b7-d204-464b-a49c-3e449ba15de3)
 
 ## BB84 
-i remembered that there was still a section that we havent seen which was the BB84 encryption, so doing a quick search i found this article talking about BB84 so i checked it out and to my surprise it had the way to solve this encryption::[https://medium.com/quantum-untangled/quantum-key-distribution-and-bb84-protocol-6f03cc6263c5](url)
+i remembered that there was still a section that we havent seen which was the BB84 encryption, after searching online, I found this article talking about BB84 so i checked it out and to my surprise it had the way to solve this encryption::[https://medium.com/quantum-untangled/quantum-key-distribution-and-bb84-protocol-6f03cc6263c5](url)
 
 ![image](https://github.com/user-attachments/assets/da4aa183-f7cf-4d6d-b970-3af5aae982fc)
 
-- so by manually mapping x to 0 or to 1 and + to the other, i tried x = 0 and + = 1 using this python script
+- After reviewing the BB84 protocols, I implemented a script to decrypt it, mapping 'x' to 0 and '+' to 1
  
 ```python
   def bb84_to_bits(bb84_string):
@@ -300,7 +304,12 @@ binary= bb84_to_bits(bb84_string)
 
 print(binary)
   ```
+![image](https://github.com/user-attachments/assets/7ac8702b-57af-4696-9653-f1b8b571c64b)
+
 - and it gave me part of the flag `ASU{BB84Ch4ll3n` and gave me another string which was `hvvhhvvvhhvvhhvvhvhvvvvvhvhhhvhhhvhhvhhhhvhvvvvvhvhhhhhvhvvhvvhhhvvhvhhvhvvhhhvvhvvhhvhvhvhvhhhhhvvhvvvvhvvvhhhhhvhvvvvvhvhvhhvvhvvhvhhhhvvhhhhvhvvvhhvhhvvhhvhvhvvhhvhhhvhvhhvvhhvvhhvvhvvhhhvvhvvvhhvhhhvvhhvvhvvvhvhhhvhvvvvvhvhvhhhhhvvvhhvhhvvhvhhvhvvvhvvhhhvvhvhhhvvvhvhhhhvvhhvvhvhhvhvvhhvvhhvvhvvvvhhvhvhvvvvvhvhhhhvhhvvvhhvhhvvvhvhvhvvvhvhhhvvhhvhvhvhhhvvhhhvvhhhhhvvvhhvhhvvhhhvvhhvvhhvvhvhvvvvvhvhvhvvvhhvvhhhvhvvhvvvhhvhhvvvhhhvvhhvvhvvvhhvhhvhvvvvvhvhhhhvvhhvvhhhhhvvhhvhhhhvvhhvvhvvvvvhv`
+- 
+![image](https://github.com/user-attachments/assets/8ed24e5a-84fc-44b6-b8b2-49f0f77ec205)
+
   i kept the same code but just changed the input string so i mapped h=0 and v = 1
 ```python
 
@@ -314,5 +323,12 @@ binary = bb84_to_bits(bb84_string)
 
 print(binary)
 ```
-- and it finally gave it,, the 2nd and final part of the flag: `g3_DH_AlicePop_SharedS3cr3t_Priv4t3K3y_BruteF0rc3_W1nN3r_C0d3}` and by combining the 2 parts we get: ` ASU{BB84Ch4ll3ng3_DH_AlicePop_SharedS3cr3t_Priv4t3K3y_BruteF0rc3_W1nN3r_C0d3}`
+
+![image](https://github.com/user-attachments/assets/664946d6-2bc6-499b-9e88-046cf0379c81)
+
+- and it finally gave it,, the 2nd and final part of the flag: `g3_DH_AlicePop_SharedS3cr3t_Priv4t3K3y_BruteF0rc3_W1nN3r_C0d3}` and by submitting the final part we get the full flag:
+
+![image](https://github.com/user-attachments/assets/195bcf72-8deb-463d-87b0-c1e76dbcdf8e)
+
+### `ASU{BB84Ch4ll3ng3_DH_AlicePop_SharedS3cr3t_Priv4t3K3y_BruteF0rc3_W1nN3r_C0d3}`
 
