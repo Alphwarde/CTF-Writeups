@@ -11,9 +11,24 @@ The challenge presented, "Operation Cipher Breaker," is a multi-stage cryptograp
 
 The challenge begins bn using `netcat`. For those unfamiliar, `netcat` (also called  `nc`) is a powerful command-line utility for network connections. It allows you to read and write data across network connections using TCP or UDP. In this challenge, `netcat` provided the first thing you have to solve.
 
-Upon executing the provided `netcat` command, I was presented with a terminal application prompt. The first prompt asked for the "password length." This was  confusing, as it wasn't immediately clear what password this referred to. My initial attempts involved entering random numbers, which led nowhere. I then tried starting from 1 and increasing. This process continued until I entered `21`, at which point the application proceeded to the next stage. This indicated that the password I needed to guess was exactly 21 characters long.
+Upon executing the provided `netcat` command, I was presented with a terminal application prompt. 
+![image](https://github.com/user-attachments/assets/8bdff617-66c7-4410-85ab-ab806d44925c)
+
+The first prompt asked for the "password length." This was  confusing, as it wasn't immediately clear what password this referred to. My initial attempts involved entering random numbers, which led nowhere. I then tried starting from 1 and increasing. This process continued until I entered `21`, at which point the application proceeded to the next stage.
+This indicated that the password I needed to guess was exactly 21 characters long.
+
+![image](https://github.com/user-attachments/assets/195857d9-3f51-4fc6-a509-e99df52a04ed)
+
+
 
 The next prompt was "guess the password," and it displayed  a series of underscores: ` ---------------`. This indicated that I needed to input the password character by character. As I inputted characters, the interface provided feedback. If a guessed letter was correct and present in the password, it would be revealed in its correct position(s). For instance, if I typed "A" and the password contained the letter 'A' in the 5th and 12th positions, the display might update to look like `----A----A-----`. This interactive feedback mechanism allowed me to  guess letters and deduce the password. Through  trial and error, inputting various letters and observing their placement, I eventually uncovered the complete password: `oracleattackisthebest`.
+
+![image](https://github.com/user-attachments/assets/80c742dc-d539-452b-b77a-a1a74477c3a8)
+
+
+![image](https://github.com/user-attachments/assets/f7954bab-34bc-4b35-8650-3d2265ee3e98)
+
+
 
   ## AES Decryption
 
