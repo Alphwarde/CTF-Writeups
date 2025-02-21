@@ -7,7 +7,7 @@ The challenge presented, "Operation Cipher Breaker," is a multi-stage cryptograp
 - A `.aes` file named`Python_Code.aes`
 - A `netcat` command,.
 
-  ## Netcat and terminal interactions
+## Netcat and terminal interactions
 
 The challenge begins bn using `netcat`. For those unfamiliar, `netcat` (also called  `nc`) is a powerful command-line utility for network connections. It allows you to read and write data across network connections using TCP or UDP. In this challenge, `netcat` provided the first thing you have to solve.
 
