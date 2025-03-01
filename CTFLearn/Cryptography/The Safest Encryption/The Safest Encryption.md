@@ -1,55 +1,96 @@
-# The Safest Encryption - Writeup
-### Solve time: ~20 mins
-## Challenge description
-The Challenge presented,"The Safest Encryption" is a very hidden use of XOR encryption
-* *The Challenge Prompt*: I intercepted this zip file, the contents seem to be encrypted, but it looks like the key is also in there. Could you try recovering the encrypted file?
-* *ZipFile* named `CTFLearn.zip`
-* Challenge diffiulty: Medium
-* Challenge Points: 40
-## My approach and thought process
-- So at first i checked the zipfile and unzipped it to find a `.txt` file and a `.pdf` file
+# The Safest Encryption - Writeup  
+### Solve time: ~20 mins  
 
-![image](https://github.com/user-attachments/assets/1979d10a-d015-461c-a12d-5e0939d83fb4)
+## Challenge description  
+The challenge, *"The Safest Encryption"*, involves a hidden use of XOR encryption.
 
-- I tried opening both the files and they didnt work so i used `file` to check their usability 
+**Challenge Prompt**:  
+I intercepted this zip file, and the contents seem to be encrypted, but it looks like the key is also inside. Could you try recovering the encrypted file?
 
-![image](https://github.com/user-attachments/assets/069977eb-9aca-4aa3-be17-fdd7a8294569)
+- **Zip File**: `CTFLearn.zip`
+- **Challenge Difficulty**: Medium
+- **Challenge Points**: 40
 
-- I decided to fix the file headers for both the files, starting with the `.pdf` file, the magic bytes for the `.pdf` should be `25 50 44 46 2D`
-![image](https://github.com/user-attachments/assets/485c0a8c-5b24-4dc3-85d4-03a563d4da2c) Becomes:
-![image](https://github.com/user-attachments/assets/b32b5f7a-4804-4693-a45d-778605088bc4)
+---
 
-- Now when i tried opening the PDF, i couldnt open it so i knew that the PDF is empty or maybe its just a `Red Herring`
-- When i read the Challenge's name i thought `AES` but seeing it provided nothing with 2 almost useless file
-- i thought about seeing if they are actually containing anything so i run `wc` on both files (`word count`)
-  ![image](https://github.com/user-attachments/assets/1211992f-4f1b-4da8-879a-949d9a684330)
-- `113` lines / `79` lines
-- `547` words/`547` words
-- and the same bytes which are `24056`
-- I ran `xxd` to make sure that my idea is correct
-- ![image](https://github.com/user-attachments/assets/a12a40f6-9aab-4610-a4c4-0b54e199f0f7)
-- ![image](https://github.com/user-attachments/assets/59a2dcd9-f951-465c-b902-eb30f309948f)
+## My Approach and Thought Process
+
+1. **Initial Inspection**  
+   I started by unzipping `CTFLearn.zip`, which revealed two files: `CTFLearn.pdf` and `CTFLearn.txt`.
+
+   ![Unzipped Files](https://github.com/user-attachments/assets/1979d10a-d015-461c-a12d-5e0939d83fb4)
+
+2. **Checking the Files' Usability**  
+   I tried opening both files, but neither worked. I used the `file` command to inspect their formats.
+
+   ![File Command Result](https://github.com/user-attachments/assets/069977eb-9aca-4aa3-be17-fdd7a8294569)
+
+3. **Fixing the File Headers**  
+   After checking the files, I suspected that the file headers might be incorrect. I began by fixing the header of the `.pdf` file. The magic bytes for a PDF file should be `25 50 44 46 2D`. 
+
+   Before fixing the header:  
+   ![Original PDF Header](https://github.com/user-attachments/assets/485c0a8c-5b24-4dc3-85d4-03a563d4da2c)
+
+   After fixing the header:  
+   ![Fixed PDF Header](https://github.com/user-attachments/assets/b32b5f7a-4804-4693-a45d-778605088bc4)
+
+4. **Opening the Fixed PDF**  
+   Even after fixing the header, the PDF wouldn’t open. This led me to believe the PDF was either empty or just a red herring in the challenge.
+
+5. **Analyzing the Challenge Name**  
+   Given the name of the challenge, I initially thought it could be related to AES encryption, but after testing it with no results, I decided to investigate further using the provided files.
+
+6. **Looking for Clues**  
+   I ran `wc` (word count) on both files to check their byte size.
+
+wc CTFLearn.pdf 
+113 565 24065 CTFLearn.pdf
+
+wc CTFLearn.txt
+79 547 24065 CTFLearn.txt
+
+Both files had the same number of bytes (`24065`), indicating they might be related.
+
+7. **Verifying the Identical Files with `xxd`**  
+I ran `xxd` on both files to examine their content. The output showed identical, seemingly random binary data.
+
+![xxd output](https://github.com/user-attachments/assets/a12a40f6-9aab-4610-a4c4-0b54e199f0f7)
+
+![xxd output 2](https://github.com/user-attachments/assets/59a2dcd9-f951-465c-b902-eb30f309948f)
+
+---
 
 ## The Solution
-- so seeing that the bytes are identical, and the xxd shows gibberish binary data,,, i figured this might be `XOR` since usually they key and cipher are the same length, if either the key is repeated for the ciphertext or its just a long key
+
+Based on my observations, I deduced that the two files were XORed with each other, likely because the encryption key is the same length as the data itself.
+
+### **XOR Decryption Code**
+
+I wrote a simple Python script to XOR the two files together:
 
 ```python
-file1 = bytearray(open("CTFlearn.pdf", "rb").read())  # open("CTFlearn.pdf", "rb"): Opens CTFlearn.pdf in binary read mode (rb).
-file2 = bytearray(open("CTFlearn.txt", "rb").read()) # same thing here
+# Open both files in binary read mode
+file1 = bytearray(open("CTFlearn.pdf", "rb").read())  
+file2 = bytearray(open("CTFlearn.txt", "rb").read())  
 
+# Create a bytearray to hold the XORed result
+xord_byte_array = bytearray(len(file1))
 
-xord_byte_array = bytearray(len(file1_b))   
+# XOR each byte of the two files
+for i in range(len(file1)):
+ xord_byte_array[i] = file1[i] ^ file2[i]
 
-for i in range(len(file1_b)): 
-    xord_byte_array[i] = file1_b[i] ^ file2_b[i]
-
-
+# Write the XORed result to a new output file
 with open("output.pdf", "wb") as out_file:
-    out_file.write(xord_byte_array)
+ out_file.write(xord_byte_array)
 
-print("done") 
+print("done")
 ```
-- so checking out The `output.pdf` in hopes of finding something
--![image](https://github.com/user-attachments/assets/790447a6-03de-474c-b35d-c7b96eb3fc49)
-#### The flag is: `CTFlearn{CTFlearn_is_fun_hope_you_enjoyed_it!}`
-## hopefully you enjoyed reading this writeup, if so, please show your love and appreciation so i can keep  making writeups like this in the future <3
+Result:
+- After running the script, I checked the resulting output.pdf and found the flag inside.
+![image](https://github.com/user-attachments/assets/008d2cd2-ea29-4d1d-9ff5-da901dad801c)
+
+The Flag:
+## CTFlearn{CTFlearn_is_fun_hope_you_enjoyed_it!}
+
+### I hope this writeup helped you understand the solution to the challenge! The key was recognizing the XOR encryption and understanding that both files were the same length and likely encrypted using XOR. If you found this writeup helpful, feel free to show your appreciation so I can continue creating writeups like this. Thanks for reading and for your time! 💖
