@@ -89,8 +89,11 @@ print("done")
 Result:
 - After running the script, I checked the resulting output.pdf and found the flag inside.
 ![image](https://github.com/user-attachments/assets/008d2cd2-ea29-4d1d-9ff5-da901dad801c)
+- Also after solving it through this script i found a tool called `XORfiles`
+- ![image](https://github.com/user-attachments/assets/12448cb8-e40b-4a8a-8794-9f34878a6c29)
 
-The Flag:
-## CTFlearn{CTFlearn_is_fun_hope_you_enjoyed_it!}
+  
+# The Flag:
+### CTFlearn{CTFlearn_is_fun_hope_you_enjoyed_it!}
 
 ### I hope this writeup helped you understand the solution to the challenge! The key was recognizing the XOR encryption and understanding that both files were the same length and likely encrypted using XOR. If you found this writeup helpful, feel free to show your appreciation so I can continue creating writeups like this. Thanks for reading and for your time! 💖
