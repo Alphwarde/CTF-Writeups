@@ -69,18 +69,15 @@ Based on my observations, I deduced that the two files were XORed with each othe
 I wrote a simple Python script to XOR the two files together:
 
 ```python
-# Open both files in binary read mode
+
 file1 = bytearray(open("CTFlearn.pdf", "rb").read())  
 file2 = bytearray(open("CTFlearn.txt", "rb").read())  
 
-# Create a bytearray to hold the XORed result
 xord_byte_array = bytearray(len(file1))
 
-# XOR each byte of the two files
 for i in range(len(file1)):
  xord_byte_array[i] = file1[i] ^ file2[i]
 
-# Write the XORed result to a new output file
 with open("output.pdf", "wb") as out_file:
  out_file.write(xord_byte_array)
 
