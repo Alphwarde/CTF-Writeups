@@ -61,4 +61,4 @@ I **found the flag!**
 
 ## Support the Page ❤️  
 
-I hope you enjoyed this writeup! If you want me to keep uploading writeups weekly, please show your love to the page. Your support keeps me motivated to share more solutions! 
+I hope you enjoyed this writeup! If you want me to keep uploading writeups often, please show your love to the page. Your support keeps me motivated to share more solutions! 
