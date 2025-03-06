@@ -91,7 +91,7 @@ I decided to run `exiftool`, `strings`, and `binwalk` again—starting with `exi
 
 ![ExifTool Hidden Image](https://github.com/user-attachments/assets/46429fa9-6345-4f09-a670-cb57613e91bd)  
 
-The **trailer data after the IEND chunk** indicated **additional hidden data**. So that was a hint to use `steg` again
+The **trailer data after the IEND chunk** indicated **additional hidden data**. So that was a hint to use `zsteg` again
 
 ---
 
