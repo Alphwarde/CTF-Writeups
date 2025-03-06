@@ -41,7 +41,7 @@ Rounded becomes **106**, and adding **4** results in **`110`**.
   ![image](https://github.com/user-attachments/assets/2ebeec3f-74b2-4ead-9232-c4f042161e2e)  
   The output was **`wearenumberone`**  
 
-## Flag  - `CTFlearn{1_kn3W_tH3_r3D_w4s_0ff}`  
+## Flag  - `wearenumberone`  
 
 ## Support the Page ❤️  
 
