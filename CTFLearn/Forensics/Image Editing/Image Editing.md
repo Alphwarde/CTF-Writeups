@@ -15,7 +15,8 @@ The challenge, **Image Editing**, involves extracting data from an image using v
 ### Step 1: Initial Inspection  
 I opened the provided `final.png` file:  
 
-![Opened Image](https://github.com/user-attachments/assets/d4915148-aec8-4d04-a709-1380a25a16fa)  
+![Opened Image](https://github.com/user-attachments/assets/d4915148-aec8-4d04-a709-1380a25a16fa) 
+- Nothing Important in the metadata
 
 There was nothing visually important in the image, so I moved on to metadata analysis using **ExifTool** and **Strings**.  
 
