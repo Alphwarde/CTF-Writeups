@@ -48,7 +48,9 @@ First, I checked the extracted files:
 
 Since `binwalk` didn’t lead to a solution, I returned to `zsteg`.  
 
-#### **Using Zsteg**  
+#### **Using Zsteg** 
+![image](https://github.com/user-attachments/assets/48c0472c-30b5-49df-85f6-a6e7b19e9736)
+
 The output included:  
 `b1,r,lsb,xy`
 
