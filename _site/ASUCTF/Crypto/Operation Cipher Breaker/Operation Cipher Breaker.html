@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Operation Cipher Breaker | CTF-Writeups</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Operation Cipher Breaker" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Here i’ll put all the writeups from CTF challenges that i encounter in CTF websites and competitions" />
+<meta property="og:description" content="Here i’ll put all the writeups from CTF challenges that i encounter in CTF websites and competitions" />
+<link rel="canonical" href="http://localhost:4000/ASUCTF/Crypto/Operation%20Cipher%20Breaker/Operation%20Cipher%20Breaker.html" />
+<meta property="og:url" content="http://localhost:4000/ASUCTF/Crypto/Operation%20Cipher%20Breaker/Operation%20Cipher%20Breaker.html" />
+<meta property="og:site_name" content="CTF-Writeups" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Operation Cipher Breaker" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Here i’ll put all the writeups from CTF challenges that i encounter in CTF websites and competitions","headline":"Operation Cipher Breaker","url":"http://localhost:4000/ASUCTF/Crypto/Operation%20Cipher%20Breaker/Operation%20Cipher%20Breaker.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=5f9dec9ce37b50ece8caed6050f7c48d838e15b5">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">CTF-Writeups</a></h1>
+      
+
+      <h2 id="operation-cipher-breaker">Operation Cipher Breaker</h2>
+<p>i can see why nobody else solved this question</p>
+<h3 id="challenge-description">Challenge Description</h3>
+
+<p>The challenge presented, “Operation Cipher Breaker,” is a multi-stage cryptography puzzle. The primary goal was to decrypt an AES encrypted file, which in turn contained a Python script that has  an RSA encryption . Solving the RSA challenge within the decrypted script would give us the flag. While I don’t remember the wording of the initial prompt, it explicitly stated that decrypting the provided <code class="language-plaintext highlighter-rouge">.aes</code> file would be a code (likely Python), and this code would contain an RSA problem that needed to be solved to obtain the flag. This hints at knowing both symmetric and assymetric encodings.</p>
+
+<ul>
+  <li>A <code class="language-plaintext highlighter-rouge">.aes</code> file named<code class="language-plaintext highlighter-rouge">Python_Code.aes</code></li>
+  <li>A <code class="language-plaintext highlighter-rouge">netcat</code> command,.</li>
+</ul>
+
+<h2 id="netcat-and-terminal-interactions">Netcat and terminal interactions</h2>
+
+<p>The challenge begins bn using <code class="language-plaintext highlighter-rouge">netcat</code>. For those unfamiliar, <code class="language-plaintext highlighter-rouge">netcat</code> (also called  <code class="language-plaintext highlighter-rouge">nc</code>) is a powerful command-line utility for network connections. It allows you to read and write data across network connections using TCP or UDP. In this challenge, <code class="language-plaintext highlighter-rouge">netcat</code> provided the first thing you have to solve.</p>
+
+<p>Upon executing the provided <code class="language-plaintext highlighter-rouge">netcat</code> command, I was presented with a terminal application prompt. 
+<img src="https://github.com/user-attachments/assets/8bdff617-66c7-4410-85ab-ab806d44925c" alt="image" /></p>
+
+<p>The first prompt asked for the “password length.” This was  confusing, as it wasn’t immediately clear what password this referred to. My initial attempts involved entering random numbers, which led nowhere. I then tried starting from 1 and increasing. This process continued until I entered <code class="language-plaintext highlighter-rouge">21</code>, at which point the application proceeded to the next stage.
+This indicated that the password I needed to guess was exactly 21 characters long.</p>
+
+<p><img src="https://github.com/user-attachments/assets/195857d9-3f51-4fc6-a509-e99df52a04ed" alt="image" /></p>
+
+<p>The next prompt was “guess the password,” and it displayed  a series of underscores: ` —————<code class="language-plaintext highlighter-rouge">. This indicated that I needed to input the password character by character. As I inputted characters, the interface provided feedback. If a guessed letter was correct and present in the password, it would be revealed in its correct position(s). For instance, if I typed "A" and the password contained the letter 'A' in the 5th and 12th positions, the display might update to look like </code>—-A—-A—–<code class="language-plaintext highlighter-rouge">. This interactive feedback mechanism allowed me to  guess letters and deduce the password. Through  trial and error, inputting various letters and observing their placement, I eventually uncovered the complete password: </code>oracleattackisthebest`.</p>
+
+<p><img src="https://github.com/user-attachments/assets/80c742dc-d539-452b-b77a-a1a74477c3a8" alt="image" /></p>
+
+<p><img src="https://github.com/user-attachments/assets/f7954bab-34bc-4b35-8650-3d2265ee3e98" alt="image" /></p>
+
+<p>## AES Decryption</p>
+
+<p>With the password obtained from the <code class="language-plaintext highlighter-rouge">netcat</code>, the next step was to decrypt the <code class="language-plaintext highlighter-rouge">Python_Code.aes</code> file. AES (Advanced Encryption Standard) is a symmetric-key encryption algorithm, meaning the same key is used for both encryption and decryption. Typically, AES requires both a password (the key) and an Initialization Vector (IV). The IV is a random value that ensures that encrypting the same plaintext multiple times with the same key produces different ciphertexts. This adds an extra layer of security.</p>
+
+<p>However, the challenge description didn’t provide any information about an IV. This led me to consider the different modes of operation for AES. After some research, I found the various AES modes and whether they utilize an IV:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ECB (Electronic Codebook): Does NOT use an IV.
+CBC (Cipher Block Chaining): Uses an IV.
+PCBC (Propagating Cipher Block Chaining): Uses an IV.
+CFB (Cipher Feedback): Uses an IV.
+CTR (Counter): Uses an IV.
+OFB (Output Feedback): Uses an IV.
+GCM (Galois/Counter Mode): Uses an IV (and an authentication tag).
+CCM (Counter with CBC-MAC): Uses an IV (and an authentication tag).
+</code></pre></div></div>
+
+<p>Given that an IV was not provided, the most likely AES mode used for encryption was ECB. ECB mode is generally avoided in practice for encrypting more than one block of data because it encrypts each block independently. This can lead to patterns in the ciphertext that reflect patterns in the plaintext, making it vulnerable to certain types of attacks. like the <code class="language-plaintext highlighter-rouge">Penguin attack</code> which was named like this after the image of the linux penguin</p>
+
+<p><img src="https://github.com/user-attachments/assets/6b408862-642a-4351-9a5c-084a40d6e6a4" alt="image" /></p>
+
+<p>To decrypt the file, I used the <code class="language-plaintext highlighter-rouge">openssl</code> command-line tool. <code class="language-plaintext highlighter-rouge">openssl</code> is a versatile and widely used cryptography toolkit. The following command was used for decryption:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl enc <span class="nt">-aes-256-ecb</span> <span class="nt">-d</span> <span class="nt">-in</span> Python_Code.aes <span class="nt">-out</span> decrypted_file.py <span class="nt">-pass</span> pass:oracleattackisthebest
+</code></pre></div></div>
+
+<p>Let’s break down this command:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">openssl enc</code>: tells openssl to encrypt or decrypt.</li>
+  <li><code class="language-plaintext highlighter-rouge">-aes-256-ecb</code>: Specifies the encryption algorithm as AES with a 256-bit key and the ECB mode of operation.</li>
+  <li><code class="language-plaintext highlighter-rouge">-d</code>: means that we want to decrypt.</li>
+  <li><code class="language-plaintext highlighter-rouge">-in Python_Code.aes</code>: Specifies the input file as <code class="language-plaintext highlighter-rouge">Python_Code.aes</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">-out decrypted_file.py</code>: Specifies the output file where the decrypted content will be saved as <code class="language-plaintext highlighter-rouge">decrypted_file.py</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">-pass pass:oracleisthebest</code>: Provides the decryption password, <code class="language-plaintext highlighter-rouge">oracleattackisthebest</code>, which was obtained from the <code class="language-plaintext highlighter-rouge">netcat</code>. The <code class="language-plaintext highlighter-rouge">pass:</code> prefix indicates that the following string is the password itself.</li>
+</ul>
+
+<p>Executing this command successfully decrypted the AES file, and the resulting <code class="language-plaintext highlighter-rouge">decrypted_file.py</code> contained a Python script that had an RSA challenge.</p>
+
+<p>## RSA Analysis and Solution</p>
+
+<p>The decrypted Python code presented an RSA encryption scenario with some trick. Here’s the code:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">getPrime</span><span class="p">,</span> <span class="n">bytes_to_long</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">getPrime</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">getPrime</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
+<span class="n">e</span> <span class="o">=</span> <span class="mi">65537</span>
+
+<span class="n">off_p</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">127</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">off_q</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">127</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">m_p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">off_p</span>
+<span class="n">m_q</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="n">off_q</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">q</span><span class="p">)</span>
+
+<span class="n">flag</span> <span class="o">=</span> <span class="sa">b</span><span class="s">"ASU{REDACTED}"</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">bytes_to_long</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+<span class="n">ct</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'n'</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
+    <span class="s">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">,</span>
+    <span class="s">'ct'</span><span class="p">:</span> <span class="n">ct</span><span class="p">,</span>
+    <span class="s">'a'</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span>
+    <span class="s">'b'</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span>
+    <span class="s">'c'</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span>
+    <span class="s">'m_p'</span><span class="p">:</span> <span class="n">m_p</span><span class="p">,</span>
+    <span class="s">'m_q'</span><span class="p">:</span> <span class="n">m_q</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">out</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s"> = </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="s">"""
+ct = 27269193117198408529057603732666981805296994550819334288149326078774442249995062137190695481980142396757301290477026833959002692605149033744458303704512628026322236579587527423170389662441904217640346031398698546066760821519815911416594182643909570963086557581689712265753792131078821710848288011077809649760
+a = 398956658
+n = 79720563485054306688554767380892915858803248029497392990424655344841018915665658109307763257773067036586920144477403367967705790444346588991617330961045992512279558009642631446878277417385777682242480790313736534918106758165226159499672774935940438724503613897940523207339621376191913605585695224241192007663
+e = 65537
+b = 1013449699
+c = -18751472181131306344848757411333396797307015457096661524610622303315684271752711072755783832868633607087138778801225839362896290775909130634006331173536537974886077170195558986900255772609753615857931854211688093880308892107186038035527869641186419946572916792723937089105559291051678993921935783318656328524730100135
+m_p = 6855747695715482747202755101102817503896083596450891824868593446382635050035536327876517791360928938529532601296513430810276412241583367798674807312600479
+m_q = 11628281410483626608977070041248810263357067120265838705464116752004012236472241260656775920106898687394314883337175198939599419683261210344782618623753480
+print("m_q is estimated to q")
+print("!!!Do you really love MATHS!!!")
+"""</span>
+</code></pre></div></div>
+
+<p>The code generates two large prime numbers, <code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">q</code>, and calculates <code class="language-plaintext highlighter-rouge">n</code> as their product. This is the modulus in RSA. The public exponent <code class="language-plaintext highlighter-rouge">e</code> is set to the common value 65537. The code then hass some  random offsets (<code class="language-plaintext highlighter-rouge">off_p</code>, <code class="language-plaintext highlighter-rouge">off_q</code>) and calculates <code class="language-plaintext highlighter-rouge">m_p</code> and <code class="language-plaintext highlighter-rouge">m_q</code>. Importantly, the comment <code class="language-plaintext highlighter-rouge">"m_q is estimated to q"</code> and the equation <code class="language-plaintext highlighter-rouge">c = -(a * (p**2) + b * q)</code> are strong hints.</p>
+
+<p>Standard RSA decryption requires knowledge of the private exponent <code class="language-plaintext highlighter-rouge">d</code>, which is the modular multiplicative inverse of <code class="language-plaintext highlighter-rouge">e</code> modulo Euler’s totient function which is φ(n) = (p-1)(q-1). To calculate <code class="language-plaintext highlighter-rouge">d</code>, we need the actual values of <code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">q</code>.</p>
+
+<p>The comments and the equation for <code class="language-plaintext highlighter-rouge">c</code> provide the necessary leverage to find <code class="language-plaintext highlighter-rouge">p</code>. The comment <code class="language-plaintext highlighter-rouge">"!!!Do you really love MATHS!!!"</code> is a  hint towards using the equation. The equation <code class="language-plaintext highlighter-rouge">c = -(a * (p**2) + b * q)</code> can be rearranged to solve for <code class="language-plaintext highlighter-rouge">p</code>,  we have a value for <code class="language-plaintext highlighter-rouge">q</code>. The code gives us <code class="language-plaintext highlighter-rouge">m_q</code> and the hint that it’s an estimation of <code class="language-plaintext highlighter-rouge">q</code>. Let’s assume that <code class="language-plaintext highlighter-rouge">m_q</code> is indeed equal to <code class="language-plaintext highlighter-rouge">q</code>.</p>
+
+<p>Based on this assumption, I created a simple Python script to solve for <code class="language-plaintext highlighter-rouge">p</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># Given values
+</span><span class="n">a</span> <span class="o">=</span> <span class="mi">398956658</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">1013449699</span>
+<span class="n">c</span> <span class="o">=</span> <span class="o">-</span><span class="mi">18751472181131306344848757411333396797307015457096661524610622303315684271752711072755783832868633607087138778801225839362896290775909130634006331173536537974886077170195558986900255772609753615857931854211688093880308892107186038035527869641186419946572916792723937089105559291051678993921935783318656328524730100135</span>
+<span class="n">m_q</span> <span class="o">=</span> <span class="mi">1162828141048362660897707004124881026335706712026583870</span>  <span class="c1"># The value of q
+</span>
+<span class="n">p_squared</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">c</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">m_q</span><span class="p">)</span> <span class="o">/</span> <span class="n">a</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p_squared</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running this script gave me the value for <code class="language-plaintext highlighter-rouge">p</code>: <code class="language-plaintext highlighter-rouge">10893116995437082634253255190369177378274560426561720925726293776440233993315026449559534114767485615040563229986718164259825798200675182847225173529438282</code>.</p>
+
+<p>Now that we have <code class="language-plaintext highlighter-rouge">p</code> and  <code class="language-plaintext highlighter-rouge">n</code> is provided, we can find the actual value of <code class="language-plaintext highlighter-rouge">q</code> using the relationship <code class="language-plaintext highlighter-rouge">n = p * q</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n</span> <span class="o">=</span> <span class="mi">105103299098661240466673854508923513545612931970107874087894112314830733626105845893880200172657563334552911775135658410874651790888664060152079529728589155690692182746619328876657012617737367997985113503684085439279971330854582767543462678264780620204513026825401567294269308187544074677212768144944773887211</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">10893116995437082634253255190369177378274560426561720925726293776440233993315026449559534114767485615040563229986718164259825798200675182847225173529438282</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">n</span> <span class="o">//</span> <span class="n">p</span>
+<span class="k">print</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This gave us the true value of <code class="language-plaintext highlighter-rouge">q</code>. With both <code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">q</code> known, we can now solve the RSA challenge using standard methods. One approach is to write a Python script using the <code class="language-plaintext highlighter-rouge">Crypto</code> library (specifically <code class="language-plaintext highlighter-rouge">Crypto.Util.number</code> for modular inverse) or to modify the original decrypted file. Here are the two ways :</p>
+
+<p><strong>Method 1: Editing the Original File</strong></p>
+
+<p>By uncommenting the provided ciphertext (<code class="language-plaintext highlighter-rouge">ct</code>), modulus (<code class="language-plaintext highlighter-rouge">n</code>), and public exponent (<code class="language-plaintext highlighter-rouge">e</code>) in the Python code and adding the calculated values for <code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">q</code>, we can directly decrypt the message within the original script. The core of the decryption process involves calculating the private exponent <code class="language-plaintext highlighter-rouge">d</code> and then using it to decrypt the ciphertext.</p>
+
+<p><strong>Method 2: Separate RSA Solver Script</strong></p>
+
+<p>Alternatively,we can solve it by making a dedicated RSA solver script which is what i did, using only <code class="language-plaintext highlighter-rouge">n</code>, <code class="language-plaintext highlighter-rouge">e</code>, <code class="language-plaintext highlighter-rouge">ct</code>, <code class="language-plaintext highlighter-rouge">p</code>, and <code class="language-plaintext highlighter-rouge">q</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">long_to_bytes</span><span class="p">,</span> <span class="n">inverse</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">79720563485054306688554767380892915858803248029497392990424655344841018915665658109307763257773067036586920144477403367967705790444346588991617330961045992512279558009642631446878277417385777682242480790313736534918106758165226159499672774935940438724503613897940523207339621376191913605585695224241192007663</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">6855747695715482747202755101102817503896083596450891824868593446382635050035536327876517791360928938529532601296513682404041776755685430604374649714328761</span>
+<span class="n">q</span> <span class="o">=</span> <span class="mi">11628281410483626608977070041248810263357067120265838705464116752004012236472241260656775920106898687394314883337175198939599419683261210344782618623753480</span>
+<span class="n">e</span> <span class="o">=</span> <span class="mi">65537</span>
+<span class="n">ct</span> <span class="o">=</span> <span class="mi">27269193117198408529057603732666981805296994550819334288149326078774442249995062137190695481980142396757301290477026833959002692605149033744458303704512628026322236579587527423170389662441904217640346031398698546066760821519815911416594182643909570963086557581689712265753792131078821710848288011077809649760</span>
+
+<span class="n">phi_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">phi_n</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">plaintext</span> <span class="o">=</span> <span class="n">long_to_bytes</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running either of these scripts with the correct values gives us the decrypted message in bytes. Converting these bytes to a string (often in hexa) reveals the flag.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x4153557b5253415f4b45595f344e445f4145535f4349504845525f305241434c455f323032357d
+</code></pre></div></div>
+
+<p>Finally, converting this hexadecimal representation to ASCII reveals the flag: <code class="language-plaintext highlighter-rouge">ASU{RSA_KEY_4ND_AES_CIPHER_0RACLE_2025}</code>.</p>
+
+<p><img src="https://github.com/user-attachments/assets/bd2d08a0-b436-48b1-8673-b08988111244" alt="image" /></p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
