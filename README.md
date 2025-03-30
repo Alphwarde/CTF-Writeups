@@ -28,7 +28,7 @@ Each writeup includes the following details:
 
 ## Wanna chat or contribute?  
 
-If you have a better way to solve something, found a mistake, or just want to discuss a challenge,open an issue, submit a pull request, or hit me up. Cybersecurity is all about sharing and getting better together. 
+If you have a better way to solve something, found a mistake, or just want to discuss a challenge,open an issue, submit a pull request, or hit me up on discord  `zervle` . Cybersecurity is all about sharing and getting better together. 
 
 ## Disclaimer  
 
