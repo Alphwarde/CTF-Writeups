@@ -104,7 +104,7 @@ if __name__ == "__main__":
   ```
 this gave me the Decrypted Hint: `Alice and Bob's private key consists of 7 digits as leaked to us.`
 which left me even more confused so i went back to the challenge's prompt and found only BB84 which wasn't helpful at the time, but judging by all the different variables and the hint being about a secret key and opening the server.py and finding a `Diffie-Hellman` function
-i was left with the assumption that this was a "Diffie-Hellman" encryption which i had to read about [https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange](url) after reading it for around ~40 mins i was left with the idea of getting G to the power of any private key mod P and that should give us the Public key, so its just about reversing it or finding it through python
+i was left with the assumption that this was a "Diffie-Hellman" Key Exchange, which i had to read about [https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange](url) after reading it for around ~40 mins i was left with the idea of getting G to the power of any private key mod P and that should give us the Public key, so its just about reversing it or finding it through python
 
 ## Diffie-Hellman 
 opening the `server.py`:
