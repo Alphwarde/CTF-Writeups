@@ -109,7 +109,7 @@ i was left with the assumption that this was a "Diffie-Hellman" Key Exchange, wh
 ## Diffie-Hellman 
 opening the `server.py`:
 
-```
+```python
 import random
 import sympy
 import socket
@@ -243,10 +243,7 @@ if __name__ == "__main__":
 - I realized after reading the code and understanding it, that i need to have the private key in order to find the "shared secret" which was the 2nd option in the `nc` as shown above.
 - Using the hint i got which was that the secret key was only `7 digits long`, it was obvious that this was an invite to try and bruteforce the key which wasnt too hard to do since its only 7 digits.
 - Going to the diffie-hellman function which should give us the private of one of them atleast, i decided to tweak it a little especially since it has [REDACTED] which reinforced my idea, so i exported the function to another file with my own variables (P,G, alice and bob's public)
-```
-
-
-
+```python
 def find_private_key(public_key, p, g):
     for private_key in range(1000000, 10000000):
         if pow(g, private_key, p) == public_key:
