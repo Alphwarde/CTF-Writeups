@@ -1,6 +1,6 @@
 # CTF-Writeups  
 
-Hello 👋  
+Hello   
 
 This repo is my personal collection of **CTF writeups**—basically a place where I break down interesting challenges I’ve solved, whether from **online CTF platforms or real-life competitions**. If you're into cybersecurity, hacking challenges/CTFs, or just curious about how these challenges work, you're in the right place!  
 
