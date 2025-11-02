@@ -38,7 +38,7 @@ Which Points me (along with the challenge name) to Diffie-Hellman Key exchange
 - To recover Alice's private key `a` from public values ( `g` , `p` ,`A`) i used discrete logarithm problem (DLP):
 - Find integer x such that g ^ x  = A mod p
 - This x is the discrete logarithm log_g A % p and once we have `a` or `b` we can find k for either one using:
-- $k_a/k_b = B^a (% p)
+- k_a/k_b = B^a (% p)
 - So our goal is to : compute the discrete log
 
 ## My Solution
